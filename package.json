@@ -1,0 +1,21 @@
+{
+  "name": "techquery-vue",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "TechQuery 电子产品发布查询系统 · Vue 3 + Vite 重构版",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "crawl": "node crawler/run.js",
+    "crawl:apply": "node crawler/run.js --apply"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.7"
+  }
+}

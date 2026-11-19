@@ -1,0 +1,50 @@
+:root{
+  --bg:#0f1419; --panel:#1a2028; --panel2:#222b36; --border:#2d3947;
+  --txt:#e6edf3; --txt-dim:#8b98a8; --accent:#4cc2ff; --accent2:#7c5cff;
+  --green:#3fb950; --orange:#d29922; --red:#f85149;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+  background:radial-gradient(ellipse at top,#15202b 0%,#0f1419 55%,#0a0e14 100%);
+  color:var(--txt);min-height:100vh;line-height:1.6;overflow-x:hidden;
+}
+header.site-header{
+  background:linear-gradient(90deg,rgba(124,92,255,.15),rgba(76,194,255,.10));
+  border-bottom:1px solid var(--border);padding:22px 28px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  position:sticky;top:0;backdrop-filter:blur(12px);z-index:100;
+}
+.logo{font-size:26px;font-weight:800;letter-spacing:.5px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.logo span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{color:var(--txt-dim);font-size:13px;margin-left:4px}
+.header-nav{margin-left:auto;display:flex;gap:10px;align-items:center}
+.back-btn{
+  padding:9px 18px;border-radius:10px;border:1px solid var(--border);
+  background:var(--panel2);color:var(--txt-dim);cursor:pointer;font-size:14px;font-weight:600;
+  transition:all .2s;display:none;align-items:center;gap:6px;
+}
+.back-btn:hover{color:var(--txt);border-color:var(--accent)}
+.back-btn.show{display:flex}
+.nav-btn{
+  padding:9px 18px;border-radius:10px;border:1px solid var(--border);
+  background:var(--panel2);color:var(--txt-dim);cursor:pointer;font-size:14px;font-weight:600;
+  transition:all .2s;
+}
+.nav-btn:hover{color:var(--txt);border-color:var(--accent)}
+.nav-btn.hide{display:none}
+
+main{max-width:1280px;margin:0 auto;padding:24px 28px 60px}
+.page-title{font-size:22px;font-weight:700;margin-bottom:6px}
+.page-sub{color:var(--txt-dim);font-size:14px;margin-bottom:22px}
+
+.fade-view{animation:viewIn .45s cubic-bezier(.22,.61,.36,1)}
+@keyframes viewIn{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
+
+footer.site-footer{text-align:center;padding:24px;color:var(--txt-dim);font-size:12px;border-top:1px solid var(--border);margin-top:40px}
+
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:5px}
+::-webkit-scrollbar-thumb:hover{background:#3d4a5a}

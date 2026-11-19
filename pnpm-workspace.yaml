@@ -1,0 +1,10 @@
+# pnpm workspace 配置（注意：设置键必须使用 camelCase）
+packages:
+  - '.'
+
+# Vite 及其打包器依赖（esbuild/rollup/picomatch 等）需扁平链接到顶层 node_modules，
+# 否则 pnpm 严格模块隔离会导致 Vite 无法解析其打包器依赖。
+shamefullyHoist: true
+
+# 关闭依赖变动自动重装校验，避免受限环境下 esbuild postinstall spawn 失败干扰命令
+verifyDepsBeforeRun: false
