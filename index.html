@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TechQuery · 电子产品发布查询系统</title>
-  <script src="./assets/planet-atlas.js?v=atlas1"></script>
-  <script type="module" crossorigin src="./assets/index-DS3SaDnp.js?v=atlas1"></script>
+  <script src="./assets/planet-atlas.js?v=phone1"></script>
+  <script type="module" crossorigin src="./assets/index-DS3SaDnp.js?v=phone1"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-B2ccXkEf.css">
   <style>
     .credit-link {
@@ -34,6 +34,8 @@
     }
     /* Brand-wall fallback motion: visible even while the hero video is still loading. */
     .plate .plate-stage { position: relative; overflow: hidden; }
+    .plate .plate-video { opacity: 0 !important; transition: opacity .4s ease; }
+    .plate:hover .plate-video.tq-ready { opacity: 1 !important; }
     .plate .plate-device { transition: transform .7s cubic-bezier(.2,.8,.2,1), filter .7s ease; }
     .plate:hover .plate-device,
     .plate:focus-visible .plate-device {
@@ -79,6 +81,13 @@
 
       function tuneMedia(scope) {
         (scope || document).querySelectorAll('.plate video').forEach(function (el) {
+          if (el.dataset.tqEvt !== '1') {
+            el.dataset.tqEvt = '1';
+            el.addEventListener('loadeddata', function () { el.classList.add('tq-ready'); });
+            el.addEventListener('playing', function () { el.classList.add('tq-ready'); });
+            el.addEventListener('error', function () { el.classList.remove('tq-ready'); });
+          }
+          if (el.readyState >= 2) el.classList.add('tq-ready');
           if (el.dataset.tqLazy === '1') return;
           el.dataset.tqLazy = '1';
           el.preload = 'none';
