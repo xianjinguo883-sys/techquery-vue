@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>制作说明 · TechQuery</title>
+  <style>
+    :root {
+      --bg: #05070d;
+      --panel: #0b1019;
+      --text: #f3ede4;
+      --muted: #9ca3ad;
+      --dim: #6f7782;
+      --accent: #b36a2b;
+      --line: rgba(243, 237, 228, .12);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background:
+        radial-gradient(ellipse at 78% 8%, rgba(179, 106, 43, .14), transparent 44%),
+        radial-gradient(ellipse at 8% 92%, rgba(44, 86, 132, .14), transparent 46%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+      line-height: 1.7;
+    }
+    .wrap { width: min(860px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0 56px; }
+    .kicker {
+      display: inline-flex; align-items: center; gap: 10px;
+      color: var(--accent); font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    }
+    .kicker::before { content: ""; width: 26px; height: 1px; background: var(--accent); }
+    h1 { margin: 18px 0 12px; font-size: clamp(30px, 5vw, 46px); line-height: 1.25; font-weight: 600; }
+    .lede { max-width: 700px; margin: 0; color: var(--muted); font-size: 15px; }
+    .rule { height: 1px; margin: 34px 0; background: var(--line); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .card {
+      padding: 22px 22px 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+    }
+    .card h2 { margin: 0 0 10px; font-size: 15px; font-weight: 600; color: var(--text); }
+    .card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .card.accent { border-color: rgba(179, 106, 43, .38); }
+    .card.accent h2 { color: #d99a63; }
+    .section-title { margin: 34px 0 14px; font-size: 13px; letter-spacing: .12em; color: var(--dim); text-transform: uppercase; }
+    .list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .list li { display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 18px; padding: 15px 0; border-bottom: 1px solid var(--line); }
+    .list li span:first-child { color: var(--dim); font-size: 12px; letter-spacing: .06em; }
+    .list li span:last-child { color: var(--muted); font-size: 13px; }
+    .back {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-top: 36px; color: var(--text); font-size: 13px; text-decoration: none;
+      border-bottom: 1px solid rgba(243, 237, 228, .28); padding-bottom: 4px;
+    }
+    .back:hover { color: #d99a63; border-color: rgba(179, 106, 43, .7); }
+    footer { margin-top: 54px; color: var(--dim); font-size: 11px; letter-spacing: .08em; }
+    @media (max-width: 720px) {
+      .wrap { padding-top: 42px; }
+      .grid { grid-template-columns: 1fr; }
+      .list li { grid-template-columns: 1fr; gap: 4px; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="kicker">TechQuery / About</div>
+    <h1>制作说明</h1>
+    <p class="lede">这是一份课程演示作品。下面写清楚项目做了什么、作者负责什么，以及 AI 在哪些环节参与了实现。</p>
+
+    <div class="rule"></div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>项目内容</h2>
+        <p>TechQuery 把电子产品发布信息组织成三种入口：按品牌层级展开的品牌树、横向浏览的品牌墙，以及可以用 WebGL 球面自转、点星飞近的科技宇宙。</p>
+      </section>
+      <section class="card">
+        <h2>浏览路径</h2>
+        <p>品牌树负责快速定位；品牌墙负责横向比较；科技宇宙负责空间化浏览。点选品牌后会进入品牌档案，双击可以展开该品牌的产品线。</p>
+      </section>
+      <section class="card">
+        <h2>作者负责</h2>
+        <p>确定选题与信息架构，选择三种浏览模式，确定视觉方向与交互取舍，并在每一轮版本中做验收、提出修改意见。</p>
+      </section>
+      <section class="card accent">
+        <h2>AI 辅助</h2>
+        <p>根据作者需求完成前端代码、数据整理和界面初稿，并根据作者的反馈迭代版式、动效和交互。最终取舍由作者确认。</p>
+      </section>
+    </div>
+
+    <h2 class="section-title">版本与素材</h2>
+    <ul class="list">
+      <li><span>版本</span><span>独立静态发布版，课程演示用途，不带发布平台徽标。</span></li>
+      <li><span>数据</span><span>品牌与产品信息用于查询演示，不展示产品数量，也不构成购买建议。</span></li>
+      <li><span>素材</span><span>品牌名称、产品图和品牌视觉素材来自公开资料，仅用于课程展示。</span></li>
+      <li><span>说明</span><span>如课程对 AI 使用有特定要求，以课程规定为准；本页用于主动说明 AI 的参与范围。</span></li>
+    </ul>
+
+    <a class="back" href="./">返回 TechQuery</a>
+    <footer>TechQuery · 课程演示 · 制作说明</footer>
+  </main>
+</body>
+</html>
