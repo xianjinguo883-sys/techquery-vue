@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TechQuery · 电子产品发布查询系统</title>
-  <script type="module" crossorigin src="./assets/index-DS3SaDnp.js?v=cdn-media2"></script>
+  <script src="./assets/planet-atlas.js?v=atlas1"></script>
+  <script type="module" crossorigin src="./assets/index-DS3SaDnp.js?v=atlas1"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-B2ccXkEf.css">
   <style>
     .credit-link {
@@ -75,24 +76,12 @@
   <script>
     (function () {
       var root = document.getElementById('app');
-      var textureSlugs = ['apple','asus','dell','google','honor','huawei','iqoo','lenovo','meizu','microsoft','oneplus','oppo','realme','redmagic','samsung','vivo','xiaomi','zte'];
-      var texturesWarmed = false;
 
       function tuneMedia(scope) {
         (scope || document).querySelectorAll('.plate video').forEach(function (el) {
           if (el.dataset.tqLazy === '1') return;
           el.dataset.tqLazy = '1';
           el.preload = 'none';
-        });
-      }
-
-      function warmTextures() {
-        if (texturesWarmed) return;
-        texturesWarmed = true;
-        textureSlugs.forEach(function (slug) {
-          var im = new Image();
-          im.decoding = 'async';
-          im.src = './planet-textures/' + slug + '.jpg';
         });
       }
 
@@ -110,12 +99,6 @@
           video.dataset.tqHover = '1';
           video.preload = 'auto';
           try { video.load(); } catch (err) {}
-        }
-      }, true);
-      document.addEventListener('click', function (e) {
-        var btn = e.target && e.target.closest && e.target.closest('button');
-        if (btn && btn.textContent.trim() === '科技宇宙') {
-          setTimeout(warmTextures, 20);
         }
       }, true);
     })();
