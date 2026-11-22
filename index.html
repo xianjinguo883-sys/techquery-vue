@@ -31,10 +31,94 @@
     @media (max-width: 640px) {
       .credit-link { left: 10px; bottom: 10px; font-size: 10px; padding: 4px 7px; }
     }
+    /* Brand-wall fallback motion: visible even while the hero video is still loading. */
+    .plate .plate-stage { position: relative; overflow: hidden; }
+    .plate .plate-device { transition: transform .7s cubic-bezier(.2,.8,.2,1), filter .7s ease; }
+    .plate:hover .plate-device,
+    .plate:focus-visible .plate-device {
+      transform: translateY(-7px) scale(1.045);
+      filter: brightness(1.07) saturate(1.06);
+    }
+    .plate .plate-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: linear-gradient(105deg, transparent 28%, rgba(255,255,255,.46) 48%, transparent 63%);
+      transform: translateX(-135%);
+      opacity: 0;
+      mix-blend-mode: screen;
+    }
+    .plate:hover .plate-stage::after {
+      opacity: 1;
+      animation: tqWallSweep .95s ease-out both;
+    }
+    @keyframes tqWallSweep {
+      0% { transform: translateX(-135%); opacity: 0; }
+      18% { opacity: .9; }
+      100% { transform: translateX(135%); opacity: 0; }
+    }
+    /* Keep a rendered sphere visible while the NASA texture finishes decoding. */
+    .planet-core {
+      border-radius: 50%;
+      background: radial-gradient(circle at 34% 30%, #7f98d8 0%, #344c8c 38%, #101a36 68%, #030712 100%);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .plate .plate-device, .plate .plate-stage::after { transition: none; animation: none; }
+    }
   </style>
 </head>
 <body>
   <div id="app"></div>
   <a class="credit-link" href="./about.html" title="查看制作说明">制作说明</a>
+  <script>
+    (function () {
+      var root = document.getElementById('app');
+      var textureSlugs = ['apple','asus','dell','google','honor','huawei','iqoo','lenovo','meizu','microsoft','oneplus','oppo','realme','redmagic','samsung','vivo','xiaomi','zte'];
+      var texturesWarmed = false;
+
+      function tuneMedia(scope) {
+        (scope || document).querySelectorAll('.plate video').forEach(function (el) {
+          if (el.dataset.tqLazy === '1') return;
+          el.dataset.tqLazy = '1';
+          el.preload = 'none';
+        });
+      }
+
+      function warmTextures() {
+        if (texturesWarmed) return;
+        texturesWarmed = true;
+        textureSlugs.forEach(function (slug) {
+          var im = new Image();
+          im.decoding = 'async';
+          im.src = './planet-textures/' + slug + '.jpg';
+        });
+      }
+
+      tuneMedia();
+      if (root && window.MutationObserver) {
+        new MutationObserver(function () { tuneMedia(root); })
+          .observe(root, { childList: true, subtree: true });
+      }
+
+      document.addEventListener('pointerover', function (e) {
+        var plate = e.target && e.target.closest && e.target.closest('.plate');
+        if (!plate) return;
+        var video = plate.querySelector('video');
+        if (video && video.dataset.tqHover !== '1') {
+          video.dataset.tqHover = '1';
+          video.preload = 'auto';
+          try { video.load(); } catch (err) {}
+        }
+      }, true);
+      document.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest && e.target.closest('button');
+        if (btn && btn.textContent.trim() === '科技宇宙') {
+          setTimeout(warmTextures, 20);
+        }
+      }, true);
+    })();
+  </script>
 </body>
 </html>
