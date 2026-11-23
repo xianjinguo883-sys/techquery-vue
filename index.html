@@ -67,6 +67,16 @@
       border-radius: 50%;
       background: radial-gradient(circle at 34% 30%, #7f98d8 0%, #344c8c 38%, #101a36 68%, #030712 100%);
     }
+    /* Keep the universe's twinkling stars, planet glows and selected-sphere look.
+       The two full-screen blur layers are the only things moved off the compositor:
+       their gradients stay, and the star twinkle is drawn in one canvas below. */
+    .universe-view .nebula,
+    .universe-view .galaxy-band {
+      filter: none !important;
+    }
+    .universe-view .planet {
+      will-change: transform;
+    }
     @media (prefers-reduced-motion: reduce) {
       .plate .plate-device, .plate .plate-stage::after { transition: none; animation: none; }
     }
@@ -98,6 +108,104 @@
         new MutationObserver(function () { tuneMedia(root); })
           .observe(root, { childList: true, subtree: true });
       }
+
+      /* One canvas paints the same 170 twinkling stars, so the page no longer asks
+         the compositor to animate 170 separate box-shadowed DOM nodes. */
+      (function () {
+        var raf = 0, canvas = null, ctx = null, starNodes = [], starData = [], skyEl = null;
+        var bounds = { w: 0, h: 0 };
+
+        function cleanup() {
+          if (raf) cancelAnimationFrame(raf);
+          raf = 0;
+          if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+          canvas = null;
+          ctx = null;
+          starNodes.forEach(function (node) { node.style.display = ''; });
+          starNodes = [];
+          starData = [];
+          skyEl = null;
+        }
+
+        function draw(now) {
+          if (!ctx) return;
+          ctx.clearRect(0, 0, bounds.w, bounds.h);
+          var seconds = now / 1000;
+          for (var i = 0; i < starData.length; i++) {
+            var s = starData[i];
+            var phase = ((seconds + s.delay) / s.duration) * Math.PI * 2;
+            var wave = (Math.sin(phase) + 1) / 2;
+            var alpha = 0.22 + 0.73 * wave;
+            var radius = Math.max(0.42, (s.size / 2) * (0.86 + 0.30 * wave));
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = '#eaf5ff';
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = alpha * 0.18;
+            ctx.fillStyle = '#a9d8ff';
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, Math.max(2, radius * 4.2), 0, Math.PI * 2);
+            ctx.fill();
+          }
+          raf = requestAnimationFrame(draw);
+        }
+
+        function build(sky) {
+          if (canvas || !sky) return;
+          var nodes = sky.querySelectorAll('.star');
+          if (!nodes.length) return;
+          var rect = sky.getBoundingClientRect();
+          if (rect.width < 2 || rect.height < 2) return;
+          var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+          canvas = document.createElement('canvas');
+          canvas.className = 'tq-starfield';
+          canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;';
+          sky.insertBefore(canvas, sky.firstChild);
+          canvas.width = Math.round(rect.width * dpr);
+          canvas.height = Math.round(rect.height * dpr);
+          ctx = canvas.getContext('2d');
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          bounds.w = rect.width;
+          bounds.h = rect.height;
+          skyEl = sky;
+          starNodes = Array.prototype.slice.call(nodes);
+          starData = starNodes.map(function (node) {
+            var cs = getComputedStyle(node);
+            var left = node.style.left || cs.left;
+            var top = node.style.top || cs.top;
+            var size = parseFloat(node.style.width || cs.width) || 1;
+            var duration = parseFloat(node.style.animationDuration || cs.animationDuration) || 5;
+            return {
+              x: left.indexOf('%') >= 0 ? parseFloat(left) / 100 * rect.width : (parseFloat(left) || 0),
+              y: top.indexOf('%') >= 0 ? parseFloat(top) / 100 * rect.height : (parseFloat(top) || 0),
+              size: size,
+              delay: parseFloat(node.style.animationDelay || cs.animationDelay) || 0,
+              duration: duration > 0.1 ? duration : 5
+            };
+          });
+          starNodes.forEach(function (node) { node.style.display = 'none'; });
+          raf = requestAnimationFrame(draw);
+        }
+
+        function check() {
+          var sky = document.querySelector('.universe-view .sky');
+          if (!sky) { cleanup(); return; }
+          if (skyEl && skyEl !== sky) cleanup();
+          build(sky);
+        }
+
+        if (root && window.MutationObserver) {
+          new MutationObserver(check).observe(root, { childList: true, subtree: true });
+        }
+        window.addEventListener('resize', function () {
+          if (!skyEl) return;
+          var hadSky = !!document.querySelector('.universe-view .sky');
+          cleanup();
+          if (hadSky) check();
+        });
+        check();
+      })();
 
       document.addEventListener('pointerover', function (e) {
         var plate = e.target && e.target.closest && e.target.closest('.plate');
